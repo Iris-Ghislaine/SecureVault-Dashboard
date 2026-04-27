@@ -364,14 +364,14 @@ body {
 
 /* FOCUSED_KEYBOARD state */
 .tree-node-row.focused {
-  border: 1px dashed var(--color-accent);
+  border-left: 2px dashed var(--color-accent);
   background: var(--color-bg-hover);
 }
 
 /* SELECTED_PRIMARY state */
 .tree-node-row.selected {
   background: var(--color-bg-selected);
-  border-left-color: var(--color-accent);
+  border-left: 2px solid var(--color-accent);
   color: var(--color-accent);
 }
 
