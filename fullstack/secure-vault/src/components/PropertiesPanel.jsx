@@ -127,11 +127,7 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
 
       </div>
 
-      {/* Action buttons */}
-      <div className="panel-actions">
-        <button className="btn-panel btn-panel-primary">View Raw Headers</button>
-        <button className="btn-panel btn-panel-secondary">Audit Logs</button>
-      </div>
+
 
     </aside>
   )
