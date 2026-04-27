@@ -1,6 +1,4 @@
 import { useState } from 'react'
-
-// Maps file extensions to a readable type label and icon
 const FILE_TYPES = {
   pdf:  { label: 'PDF Document',    icon: '📕' },
   docx: { label: 'Word Document',   icon: '📘' },
@@ -16,21 +14,15 @@ const FILE_TYPES = {
   zip:  { label: 'Archive',         icon: '📦' },
 }
 
-// Returns the size string directly from JSON (e.g. "12MB", "340KB")
 function formatSize(size) {
   return size || '—'
 }
 
-// Walks the tree recursively to build the FULL folder path to the file's parent
-// e.g. "01_Legal_Department / Active_Cases / Doe_vs_MegaCorp_Inc / Discovery_Phase"
-// Returns "Root" if the file is at the top level
 function getFilePath(nodes, targetId, pathSoFar = '') {
   for (const node of nodes) {
-    // Build the running path including this node's name
     const currentPath = pathSoFar ? `${pathSoFar} / ${node.name}` : node.name
-    // If this node IS the target file, return the path built so far (its parent path)
+
     if (node.id === targetId) return pathSoFar || 'Root'
-    // If this node has children, search inside them
     if (node.children) {
       const found = getFilePath(node.children, targetId, currentPath)
       if (found !== null) return found
@@ -40,10 +32,9 @@ function getFilePath(nodes, targetId, pathSoFar = '') {
 }
 
 export default function PropertiesPanel({ selectedFile, nodes, onClose }) {
-  // null = closed, 'headers' or 'logs' = which modal is open
+  
   const [modal, setModal] = useState(null)
 
-  // Show empty state when no file is selected
   if (!selectedFile) {
     return (
       <aside className="app-panel">
@@ -61,11 +52,8 @@ export default function PropertiesPanel({ selectedFile, nodes, onClose }) {
     )
   }
 
-  // Get file extension and look up its type info
   const ext = selectedFile.name.split('.').pop().toLowerCase()
   const fileType = FILE_TYPES[ext] ?? { label: `${ext.toUpperCase()} File`, icon: '📄' }
-
-  // Get the full folder path by searching the tree recursively
   const folderPath = getFilePath(nodes, selectedFile.id) ?? 'Root'
 
   return (

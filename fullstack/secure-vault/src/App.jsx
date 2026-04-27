@@ -4,31 +4,20 @@ import FileTree from './components/FileTree.jsx'
 import PropertiesPanel from './components/PropertiesPanel.jsx'
 
 export default function App() {
-  // The currently selected file object (or null if none selected)
   const [selectedFile, setSelectedFile] = useState(null)
-
-  // The search query typed in the sidebar search bar
   const [searchQuery, setSearchQuery] = useState('')
-
-  // Last 5 recently accessed files — loaded from localStorage so they persist on refresh
   const [recentFiles, setRecentFiles] = useState(
     () => JSON.parse(localStorage.getItem('recentFiles') || '[]')
   )
 
-  // Save recentFiles to localStorage whenever the list changes
   useEffect(() => {
     localStorage.setItem('recentFiles', JSON.stringify(recentFiles))
   }, [recentFiles])
 
-  // Controls properties panel overlay on tablet/mobile
   const [showPanel, setShowPanel] = useState(false)
-
-  // Called when user clicks a file in the tree or recent list
   function handleSelectFile(file) {
     setSelectedFile(file)
-    setShowPanel(false) // reset panel when new file selected — user can open via toggle
-
-    // Add to recent files, avoid duplicates, keep only last 5
+    setShowPanel(false) 
     setRecentFiles(prev => {
       const filtered = prev.filter(f => f.id !== file.id)
       return [file, ...filtered].slice(0, 5)
@@ -37,7 +26,6 @@ export default function App() {
 
   return (
     <div className="app-layout">
-
       {/* ── TOP HEADER ── */}
       <header className="app-header">
         <div className="header-brand">
@@ -51,15 +39,13 @@ export default function App() {
             className="btn-panel-toggle"
             onClick={() => setShowPanel(prev => !prev)}
           >
-            {showPanel ? '✕ Close' : 'ℹ Properties'}
+            {showPanel ? '✕ Close' : ' Properties'}
           </button>
         )}
 
       </header>
-
       {/* ── LEFT SIDEBAR ── */}
       <aside className="app-sidebar">
-
         {/* Search bar */}
         <div className="sidebar-search">
           <span className="search-icon">⌕</span>
@@ -71,10 +57,8 @@ export default function App() {
             onChange={e => setSearchQuery(e.target.value)}
           />
         </div>
-
         {/* File tree label */}
         <div className="sidebar-section-label">FILE SYSTEM</div>
-
         {/* Recursive file tree */}
         <FileTree
           nodes={fileData}
@@ -82,7 +66,6 @@ export default function App() {
           onSelectFile={handleSelectFile}
           searchQuery={searchQuery}
         />
-
         {/* ── RECENTLY ACCESSED FILES (wildcard feature) ── */}
         {recentFiles.length > 0 && (
           <div className="recent-section">
@@ -136,7 +119,6 @@ export default function App() {
             </div>
           </div>
         )}
-        {/* Decorative binary watermark */}
         <div className="binary-watermark">
           01001000 01000101 01011000<br />
           10110100 11001010 00110101
@@ -144,7 +126,6 @@ export default function App() {
       </main>
 
       {/* ── RIGHT PROPERTIES PANEL ── */}
-      {/* On desktop it always shows. On tablet/mobile it shows as overlay when showPanel is true */}
       <div className={`panel-overlay ${showPanel ? 'panel-overlay-open' : ''}`}
         onClick={() => setShowPanel(false)}
       />

@@ -1,13 +1,11 @@
 import { useState } from 'react'
 
-// Returns true if any descendant file name matches the search query
 function hasMatchingDescendant(node, query) {
   if (!query) return false
   if (node.type === 'file') return node.name.toLowerCase().includes(query.toLowerCase())
   return node.children?.some(child => hasMatchingDescendant(child, query))
 }
 
-// Wraps the matching part of a name in a <mark> tag for highlight
 function highlightMatch(name, query) {
   if (!query) return name
   const index = name.toLowerCase().indexOf(query.toLowerCase())
@@ -24,14 +22,10 @@ function highlightMatch(name, query) {
 export default function TreeNode({ node, selectedFile, onSelectFile, searchQuery, depth = 0 }) {
   const isFolder = node.type === 'folder'
 
-  // Tracks manual open/close by the user clicking the folder
   const [manualOpen, setManualOpen] = useState(false)
-
-  // A folder is open if the user opened it OR if a search match forces it open
   const isOpen = isFolder && (manualOpen || hasMatchingDescendant(node, searchQuery))
-
-  // Hide this node entirely if it doesn't match and has no matching descendants
   const nameMatches = node.name.toLowerCase().includes((searchQuery || '').toLowerCase())
+
   if (searchQuery && !nameMatches && !hasMatchingDescendant(node, searchQuery)) {
     return null
   }
@@ -40,34 +34,28 @@ export default function TreeNode({ node, selectedFile, onSelectFile, searchQuery
 
   function handleClick() {
     if (isFolder) {
-      setManualOpen(prev => !prev)  // toggle expand/collapse
+      setManualOpen(prev => !prev)  
     } else {
-      onSelectFile(node)         // select the file
+      onSelectFile(node)       
     }
   }
 
   return (
     <div className="tree-node">
-      {/* The clickable row for this node */}
       <div
         className={`tree-node-row ${isSelected ? 'selected' : ''}`}
-        style={{ paddingLeft: `${12 + depth * 16}px` }}  // indent by depth level
+        style={{ paddingLeft: `${12 + depth * 16}px` }} 
         data-id={node.id}
         aria-expanded={isFolder ? isOpen : undefined}
         onClick={handleClick}
-        tabIndex={-1}  // focusable by keyboard nav in FileTree, not by Tab
+        tabIndex={-1} 
       >
-        {/* Chevron arrow — only visible on folders */}
         <span className={`tree-chevron ${isFolder ? (isOpen ? 'expanded' : '') : 'empty'}`}>
           ▶
         </span>
-
-        {/* File or folder icon */}
         <span className={`node-icon ${isFolder ? 'folder' : 'file'}`}>
           {isFolder ? '📁' : '📄'}
         </span>
-
-        {/* File/folder name with search highlight */}
         <span className="node-name">
           {highlightMatch(node.name, searchQuery)}
         </span>
