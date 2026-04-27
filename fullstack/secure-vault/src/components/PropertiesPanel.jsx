@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 // Maps file extensions to a readable type label and icon
 const FILE_TYPES = {
   pdf:  { label: 'PDF Document',    icon: '📕' },
@@ -38,6 +40,8 @@ function getFilePath(nodes, targetId, pathSoFar = '') {
 }
 
 export default function PropertiesPanel({ selectedFile, nodes }) {
+  // null = closed, 'headers' or 'logs' = which modal is open
+  const [modal, setModal] = useState(null)
 
   // Show empty state when no file is selected
   if (!selectedFile) {
@@ -63,6 +67,53 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
 
   return (
     <aside className="app-panel">
+
+      {/* Modal */}
+      {modal && (
+        <div className="modal-overlay" onClick={() => setModal(null)}>
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
+
+            <div className="modal-header">
+              <span className="modal-title">
+                {modal === 'headers' ? 'Raw Headers' : 'Audit Logs'}
+              </span>
+              <button className="modal-close" onClick={() => setModal(null)}>✕ Close</button>
+            </div>
+
+            <div className="modal-divider"></div>
+
+            <div className="modal-body">
+              {modal === 'headers' ? (
+                <>
+                  <div className="modal-row">
+                    <span className="modal-row-key">X-File-ID</span>
+                    <span className="modal-row-value">{selectedFile.id}</span>
+                  </div>
+                  <div className="modal-row">
+                    <span className="modal-row-key">X-File-Name</span>
+                    <span className="modal-row-value">{selectedFile.name}</span>
+                  </div>
+                  <div className="modal-row">
+                    <span className="modal-row-key">X-File-Type</span>
+                    <span className="modal-row-value">{selectedFile.type}</span>
+                  </div>
+                  <div className="modal-row">
+                    <span className="modal-row-key">X-File-Size</span>
+                    <span className="modal-row-value">{selectedFile.size ?? '—'}</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="modal-log-entry">[READ] {selectedFile.name} accessed</div>
+                  <div className="modal-log-entry">[SCAN] Integrity check passed — ID: {selectedFile.id}</div>
+                  <div className="modal-log-entry">[AUTH] Session verified for {selectedFile.name}</div>
+                </>
+              )}
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* Panel title bar */}
       <div className="panel-header">
@@ -110,13 +161,13 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
       <div className="panel-actions">
         <button
           className="btn-panel btn-panel-primary"
-          onClick={() => alert(`Raw headers for: ${selectedFile.name}`)}
+          onClick={() => setModal('headers')}
         >
           View Raw Headers
         </button>
         <button
           className="btn-panel btn-panel-secondary"
-          onClick={() => alert(`Audit logs for: ${selectedFile.name}`)}
+          onClick={() => setModal('logs')}
         >
           Audit Logs
         </button>
