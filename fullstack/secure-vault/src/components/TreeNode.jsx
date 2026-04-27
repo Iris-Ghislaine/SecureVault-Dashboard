@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 // Returns true if any descendant file name matches the search query
 function hasMatchingDescendant(node, query) {
@@ -24,17 +24,11 @@ function highlightMatch(name, query) {
 export default function TreeNode({ node, selectedFile, onSelectFile, searchQuery, depth = 0 }) {
   const isFolder = node.type === 'folder'
 
-  // Folders start collapsed unless search forces them open
-  const [isOpen, setIsOpen] = useState(false)
+  // Tracks manual open/close by the user clicking the folder
+  const [manualOpen, setManualOpen] = useState(false)
 
-  // Auto-expand folder if a child matches the search query
-  useEffect(() => {
-    if (isFolder && hasMatchingDescendant(node, searchQuery)) {
-      setIsOpen(true)
-    }
-    // Collapse back when search is cleared
-    if (!searchQuery) setIsOpen(false)
-  }, [searchQuery])
+  // A folder is open if the user opened it OR if a search match forces it open
+  const isOpen = isFolder && (manualOpen || hasMatchingDescendant(node, searchQuery))
 
   // Hide this node entirely if it doesn't match and has no matching descendants
   const nameMatches = node.name.toLowerCase().includes((searchQuery || '').toLowerCase())
@@ -46,7 +40,7 @@ export default function TreeNode({ node, selectedFile, onSelectFile, searchQuery
 
   function handleClick() {
     if (isFolder) {
-      setIsOpen(prev => !prev)  // toggle expand/collapse
+      setManualOpen(prev => !prev)  // toggle expand/collapse
     } else {
       onSelectFile(node)         // select the file
     }
