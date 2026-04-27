@@ -39,7 +39,7 @@ function getFilePath(nodes, targetId, pathSoFar = '') {
   return null
 }
 
-export default function PropertiesPanel({ selectedFile, nodes }) {
+export default function PropertiesPanel({ selectedFile, nodes, onClose }) {
   // null = closed, 'headers' or 'logs' = which modal is open
   const [modal, setModal] = useState(null)
 
@@ -50,6 +50,9 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
         <div className="panel-header">
           <div className="panel-header-dot"></div>
           <span className="panel-header-title">Properties</span>
+          {onClose && (
+            <button className="panel-close-btn" onClick={onClose} aria-label="Close panel">✕ Close</button>
+          )}
         </div>
         <div className="panel-empty">
           <p>Select a file to view its security properties and metadata.</p>
@@ -119,6 +122,9 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
       <div className="panel-header">
         <div className="panel-header-dot"></div>
         <span className="panel-header-title">Properties</span>
+        {onClose && (
+          <button className="panel-close-btn" onClick={onClose} aria-label="Close panel">✕ Close</button>
+        )}
       </div>
 
       {/* File icon + name + type */}

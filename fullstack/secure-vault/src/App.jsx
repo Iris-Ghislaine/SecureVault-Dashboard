@@ -20,9 +20,13 @@ export default function App() {
     localStorage.setItem('recentFiles', JSON.stringify(recentFiles))
   }, [recentFiles])
 
+  // Controls properties panel overlay on tablet/mobile
+  const [showPanel, setShowPanel] = useState(false)
+
   // Called when user clicks a file in the tree or recent list
   function handleSelectFile(file) {
     setSelectedFile(file)
+    setShowPanel(false) // reset panel when new file selected — user can open via toggle
 
     // Add to recent files, avoid duplicates, keep only last 5
     setRecentFiles(prev => {
@@ -41,6 +45,15 @@ export default function App() {
           <span className="header-title">SecureVault</span>
           <span className="header-subtitle">Enterprise File Explorer</span>
         </div>
+        {/* Show properties button on tablet/mobile when a file is selected */}
+        {selectedFile && (
+          <button
+            className="btn-panel-toggle"
+            onClick={() => setShowPanel(prev => !prev)}
+          >
+            {showPanel ? '✕ Close' : 'ℹ Properties'}
+          </button>
+        )}
 
       </header>
 
@@ -107,7 +120,7 @@ export default function App() {
             <div className="workspace-file-body">
               <span className="workspace-preview-label">PREVIEW UNAVAILABLE</span>
               <p>Binary or encrypted content cannot be rendered in the browser.</p>
-              <p>Use <strong>View Raw Headers</strong> or <strong>Audit Logs</strong> in the Properties panel for more details.</p>
+              <p>Tap <strong>ℹ Properties</strong> in the header or use <strong>View Raw Headers</strong> / <strong>Audit Logs</strong> to inspect this file.</p>
             </div>
           </div>
         ) : (
@@ -131,7 +144,17 @@ export default function App() {
       </main>
 
       {/* ── RIGHT PROPERTIES PANEL ── */}
-      <PropertiesPanel selectedFile={selectedFile} nodes={fileData} />
+      {/* On desktop it always shows. On tablet/mobile it shows as overlay when showPanel is true */}
+      <div className={`panel-overlay ${showPanel ? 'panel-overlay-open' : ''}`}
+        onClick={() => setShowPanel(false)}
+      />
+      <div className={`app-panel-wrapper ${showPanel ? 'app-panel-visible' : ''}`}>
+        <PropertiesPanel 
+          selectedFile={selectedFile} 
+          nodes={fileData} 
+          onClose={() => setShowPanel(false)}
+        />
+      </div>
 
       {/* ── BOTTOM STATUS BAR ── */}
       <footer className="app-statusbar">

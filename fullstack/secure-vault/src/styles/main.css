@@ -319,12 +319,13 @@ body {
 /* --- FILE TREE --- */
 .file-tree {
   flex: 1;
-  overflow-y: auto;
+  overflow: auto;
   padding: var(--space-2) 0;
 }
 
 .file-tree::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 
 .file-tree::-webkit-scrollbar-track {
@@ -994,26 +995,28 @@ body {
 
   .app-layout {
     grid-template-columns: 1fr;
-    grid-template-rows: var(--header-height) auto 1fr auto var(--statusbar-height);
+    grid-template-rows: var(--header-height) auto 1fr var(--statusbar-height);
     grid-template-areas:
       "header"
       "sidebar"
       "main"
       "status";
-    height: auto;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
   }
 
   .app-sidebar {
-    max-height: 320px;
+    max-height: 35vh;
     border-right: none;
     border-bottom: 1px solid var(--color-border);
     overflow-y: auto;
+    flex-shrink: 0;
   }
 
   .app-main {
-    min-height: 400px;
+    flex: 1;
     overflow-y: auto;
+    min-height: 0;
   }
 
   .app-panel {
@@ -1050,3 +1053,98 @@ body {
     padding: var(--space-4);
   }
 }
+
+/* --- PROPERTIES PANEL TOGGLE (tablet/mobile) --- */
+
+/* Toggle button — hidden on desktop, visible on tablet/mobile */
+.btn-panel-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--color-accent-border);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  margin-left: auto;
+}
+
+.btn-panel-toggle:hover {
+  background: var(--color-accent-dim);
+}
+
+/* Dark overlay behind the panel on mobile */
+.panel-overlay {
+  display: none;
+}
+
+/* Panel wrapper — on desktop just passes through, on mobile becomes a fixed drawer */
+.app-panel-wrapper {
+  display: contents; /* transparent wrapper on desktop */
+}
+
+@media (max-width: 1024px) {
+  .btn-panel-toggle {
+    display: block;
+  }
+
+  /* Dark overlay */
+  .panel-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+  }
+
+  .panel-overlay.panel-overlay-open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Panel slides in from the right */
+  .app-panel-wrapper {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    z-index: 50;
+    transform: translateX(100%);
+    transition: transform var(--transition-base);
+  }
+
+  .app-panel-wrapper.app-panel-visible {
+    transform: translateX(0);
+  }
+
+  .app-panel-wrapper .app-panel {
+    display: flex;
+    height: 100%;
+    border-left: none;
+  }
+
+  .panel-close-btn {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-panel-wrapper {
+    width: 100%;
+  }
+}
+
+.panel-header-title { flex: 1; }
+.panel-close-btn { display: none; background: transparent; border: 1px solid var(--color-accent-border); color: var(--color-accent); font-family: var(--font-mono); font-size: var(--text-xs); padding: var(--space-1) var(--space-3); border-radius: var(--border-radius-sm); cursor: pointer; transition: all var(--transition-fast); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
+.panel-close-btn:hover { background: var(--color-accent-dim); border-color: var(--color-accent); }
+@media (max-width: 1024px) { .panel-close-btn { display: flex; } }
