@@ -19,12 +19,16 @@ function formatSize(size) {
   return size || '—'
 }
 
-// Walks the tree recursively to build the folder path for a given file id
-// e.g. returns "vault-root / finance / reports"
+// Walks the tree recursively to build the FULL folder path to the file's parent
+// e.g. "01_Legal_Department / Active_Cases / Doe_vs_MegaCorp_Inc / Discovery_Phase"
+// Returns "Root" if the file is at the top level
 function getFilePath(nodes, targetId, pathSoFar = '') {
   for (const node of nodes) {
+    // Build the running path including this node's name
     const currentPath = pathSoFar ? `${pathSoFar} / ${node.name}` : node.name
-    if (node.id === targetId) return pathSoFar || '/'
+    // If this node IS the target file, return the path built so far (its parent path)
+    if (node.id === targetId) return pathSoFar || 'Root'
+    // If this node has children, search inside them
     if (node.children) {
       const found = getFilePath(node.children, targetId, currentPath)
       if (found !== null) return found
@@ -54,13 +58,8 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
   const ext = selectedFile.name.split('.').pop().toLowerCase()
   const fileType = FILE_TYPES[ext] ?? { label: `${ext.toUpperCase()} File`, icon: '📄' }
 
-  // Get the folder path breadcrumb
-  const folderPath = getFilePath(nodes, selectedFile.id) ?? '/'
-
-  // Use the file's timestamp if available, otherwise use current time
-  const timestamp = selectedFile.modified
-    ? new Date(selectedFile.modified).toLocaleString()
-    : new Date().toLocaleString()
+  // Get the full folder path by searching the tree recursively
+  const folderPath = getFilePath(nodes, selectedFile.id) ?? 'Root'
 
   return (
     <aside className="app-panel">
@@ -98,27 +97,10 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
         </div>
 
         <div>
-          <div className="panel-field-label">Last Modified</div>
-          <div className="panel-field-value">
-            <span>{timestamp}</span>
-            <span className="panel-field-dot warning"></span>
-          </div>
-        </div>
-
-        <div>
           <div className="panel-field-label">File ID</div>
           <div className="panel-field-value">
             <span>{selectedFile.id}</span>
             <span className="panel-field-dot"></span>
-          </div>
-        </div>
-
-        <div>
-          <div className="panel-field-label">Access Level</div>
-          <div className="panel-access-tags">
-            <span className="access-tag">Encrypted</span>
-            <span className="access-tag">Read-Only</span>
-            <span className="access-tag">Audited</span>
           </div>
         </div>
 
