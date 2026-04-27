@@ -958,3 +958,95 @@ body {
   border-radius: var(--border-radius-sm);
   border-left: 2px solid var(--color-accent-border);
 }
+
+/* --- RESPONSIVE --- */
+
+/* Tablet: hide properties panel, shrink sidebar */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 240px;
+    --panel-width: 0px;
+  }
+
+  .app-layout {
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-areas:
+      "header  header"
+      "sidebar main"
+      "status  status";
+  }
+
+  .app-panel {
+    display: none;
+  }
+}
+
+/* Mobile: single column, sidebar becomes full-width top drawer */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 48px;
+    --statusbar-height: 28px;
+  }
+
+  html, body, #root {
+    overflow: auto;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--header-height) auto 1fr auto var(--statusbar-height);
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main"
+      "status";
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .app-sidebar {
+    max-height: 320px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    overflow-y: auto;
+  }
+
+  .app-main {
+    min-height: 400px;
+    overflow-y: auto;
+  }
+
+  .app-panel {
+    display: none;
+  }
+
+  .header-subtitle {
+    display: none;
+  }
+
+  .workspace-file-view {
+    padding: var(--space-4);
+  }
+
+  .workspace-file-title {
+    font-size: var(--text-body);
+  }
+
+  .binary-watermark {
+    display: none;
+  }
+
+  .app-statusbar {
+    gap: var(--space-3);
+    padding: 0 var(--space-3);
+    flex-wrap: wrap;
+    height: auto;
+    padding-top: var(--space-1);
+    padding-bottom: var(--space-1);
+  }
+
+  .modal-card {
+    width: 95vw;
+    padding: var(--space-4);
+  }
+}
