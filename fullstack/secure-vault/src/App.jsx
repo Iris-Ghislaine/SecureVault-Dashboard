@@ -1,122 +1,138 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import fileData from './data/data.json'
+import FileTree from './components/FileTree.jsx'
+import PropertiesPanel from './components/PropertiesPanel.jsx'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // The currently selected file object (or null if none selected)
+  const [selectedFile, setSelectedFile] = useState(null)
+
+  // The search query typed in the sidebar search bar
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // Last 5 recently accessed files (most recent first)
+  const [recentFiles, setRecentFiles] = useState([])
+
+  // Called when user clicks a file in the tree or recent list
+  function handleSelectFile(file) {
+    setSelectedFile(file)
+
+    // Add to recent files, avoid duplicates, keep only last 5
+    setRecentFiles(prev => {
+      const filtered = prev.filter(f => f.id !== file.id)
+      return [file, ...filtered].slice(0, 5)
+    })
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app-layout">
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      {/* ── TOP HEADER ── */}
+      <header className="app-header">
+        <div className="header-brand">
+          <div className="header-logo">⬡</div>
+          <span className="header-title">SecureVault</span>
+          <span className="header-subtitle">Enterprise File Explorer</span>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <div className="header-actions">
+          <span className="header-badge">CLASSIFIED</span>
+          <span className="header-badge">TLP:RED</span>
         </div>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      {/* ── LEFT SIDEBAR ── */}
+      <aside className="app-sidebar">
+
+        {/* Search bar */}
+        <div className="sidebar-search">
+          <span className="search-icon">⌕</span>
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search files..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        {/* File tree label */}
+        <div className="sidebar-section-label">FILE SYSTEM</div>
+
+        {/* Recursive file tree */}
+        <FileTree
+          nodes={fileData}
+          selectedFile={selectedFile}
+          onSelectFile={handleSelectFile}
+          searchQuery={searchQuery}
+        />
+
+        {/* ── RECENTLY ACCESSED FILES (wildcard feature) ── */}
+        {recentFiles.length > 0 && (
+          <div className="recent-section">
+            <div className="sidebar-section-label">RECENTLY ACCESSED</div>
+            {recentFiles.map(file => (
+              <div
+                key={file.id}
+                className={`recent-item ${selectedFile?.id === file.id ? 'selected' : ''}`}
+                onClick={() => handleSelectFile(file)}
+              >
+                <span className="node-icon file">📄</span>
+                <span className="node-name">{file.name}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </aside>
+
+      {/* ── MAIN WORKSPACE (centre panel) ── */}
+      <main className="app-main">
+        <div className="workspace-inactive">
+          <div className="workspace-icon">🔒</div>
+          <h2>No File Selected</h2>
+          <p>Select a file from the explorer to view its metadata and security properties.</p>
+          <div className="workspace-badges">
+            <span className="badge">AES-256</span>
+            <span className="badge">Zero Trust</span>
+            <span className="badge">E2E Encrypted</span>
+          </div>
+        </div>
+        {/* Decorative binary watermark */}
+        <div className="binary-watermark">
+          01001000 01000101 01011000<br />
+          10110100 11001010 00110101
+        </div>
+      </main>
+
+      {/* ── RIGHT PROPERTIES PANEL ── */}
+      <PropertiesPanel selectedFile={selectedFile} nodes={fileData} />
+
+      {/* ── BOTTOM STATUS BAR ── */}
+      <footer className="app-statusbar">
+        <div className="status-item">
+          <span className="status-dot"></span>
+          <span>VAULT STATUS</span>
+          <span className="status-value">ONLINE</span>
+        </div>
+        <div className="status-divider"></div>
+        <div className="status-item">
+          <span>SELECTED</span>
+          <span className="status-value">
+            {selectedFile ? selectedFile.name : '—'}
+          </span>
+        </div>
+        <div className="status-divider"></div>
+        <div className="status-item">
+          <span>QUERY</span>
+          <span className="status-value">
+            {searchQuery || '—'}
+          </span>
+        </div>
+        <div className="status-right">
+          <span className="status-link">v1.0.0</span>
+          <span className="status-link">SECURE CHANNEL</span>
+        </div>
+      </footer>
+
+    </div>
   )
 }
-
-export default App
