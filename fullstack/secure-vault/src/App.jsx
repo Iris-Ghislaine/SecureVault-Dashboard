@@ -99,7 +99,7 @@ export default function App() {
                 <div className="workspace-file-title">{selectedFile.name}</div>
                 <div className="workspace-file-meta">
                   {selectedFile.type?.toUpperCase() ?? 'FILE'} &nbsp;·&nbsp;
-                  {selectedFile.size ? `${(selectedFile.size / 1024).toFixed(1)} KB` : 'Size unknown'}
+                  {selectedFile.size ?? 'Size unknown'}
                 </div>
               </div>
             </div>

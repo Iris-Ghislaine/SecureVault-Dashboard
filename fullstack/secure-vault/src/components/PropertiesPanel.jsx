@@ -14,12 +14,9 @@ const FILE_TYPES = {
   zip:  { label: 'Archive',         icon: '📦' },
 }
 
-// Formats raw bytes into a human-readable string e.g. 2.4 KB
-function formatSize(bytes) {
-  if (!bytes) return '—'
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+// Returns the size string directly from JSON (e.g. "12MB", "340KB")
+function formatSize(size) {
+  return size || '—'
 }
 
 // Walks the tree recursively to build the folder path for a given file id
