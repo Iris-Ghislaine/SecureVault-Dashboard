@@ -124,7 +124,21 @@ export default function PropertiesPanel({ selectedFile, nodes }) {
 
       </div>
 
-
+      {/* Action buttons */}
+      <div className="panel-actions">
+        <button
+          className="btn-panel btn-panel-primary"
+          onClick={() => alert(`Raw headers for: ${selectedFile.name}`)}
+        >
+          View Raw Headers
+        </button>
+        <button
+          className="btn-panel btn-panel-secondary"
+          onClick={() => alert(`Audit logs for: ${selectedFile.name}`)}
+        >
+          Audit Logs
+        </button>
+      </div>
 
     </aside>
   )
