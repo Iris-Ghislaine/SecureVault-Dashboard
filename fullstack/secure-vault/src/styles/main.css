@@ -734,7 +734,17 @@ body {
   gap: var(--space-6);
 }
 
-.status-item {`n  display: flex;`n  align-items: center;`n  gap: var(--space-2);`n  font-family: var(--font-mono);`n  font-size: var(--text-xs);`n  color: var(--color-text-muted);`n  letter-spacing: 0.08em;`n  text-transform: uppercase;`n  min-width: 0;`n}
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  min-width: 0;
+}
 
 .status-dot {
   width: 6px;
@@ -743,7 +753,14 @@ body {
   background: var(--color-success);
 }
 
-.status-value {`n  color: var(--color-accent);`n  font-weight: 600;`n  white-space: nowrap;`n  overflow: hidden;`n  text-overflow: ellipsis;`n  max-width: 160px;`n}
+.status-value {
+  color: var(--color-accent);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
 
 .status-divider {
   width: 1px;
@@ -798,7 +815,16 @@ body {
   flex-shrink: 0;
 }
 
-.workspace-file-title {`n  font-family: var(--font-mono);`n  font-size: var(--text-h3);`n  font-weight: 600;`n  color: var(--color-accent);`n  margin-bottom: var(--space-1);`n  white-space: nowrap;`n  overflow: hidden;`n  text-overflow: ellipsis;`n}
+.workspace-file-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-h3);
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-bottom: var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .workspace-file-meta {
   font-family: var(--font-mono);
