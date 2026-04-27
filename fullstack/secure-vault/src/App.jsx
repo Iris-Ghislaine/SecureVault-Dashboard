@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import fileData from './data/data.json'
 import FileTree from './components/FileTree.jsx'
 import PropertiesPanel from './components/PropertiesPanel.jsx'
@@ -10,8 +10,15 @@ export default function App() {
   // The search query typed in the sidebar search bar
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Last 5 recently accessed files (most recent first)
-  const [recentFiles, setRecentFiles] = useState([])
+  // Last 5 recently accessed files — loaded from localStorage so they persist on refresh
+  const [recentFiles, setRecentFiles] = useState(
+    () => JSON.parse(localStorage.getItem('recentFiles') || '[]')
+  )
+
+  // Save recentFiles to localStorage whenever the list changes
+  useEffect(() => {
+    localStorage.setItem('recentFiles', JSON.stringify(recentFiles))
+  }, [recentFiles])
 
   // Called when user clicks a file in the tree or recent list
   function handleSelectFile(file) {
