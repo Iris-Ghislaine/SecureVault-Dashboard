@@ -3,6 +3,7 @@
 Dark-mode enterprise file explorer for SecureVault Inc. — built for law firms and banks to navigate encrypted documents securely.
 
 Live Demo: `https://secure-vault-dashboard.netlify.app/`
+
 Design File: `https://www.figma.com/design/mWVI86O8Ug0DXPepCcr0Mt/Secure-Vault-Prototype-Design?node-id=0-1&p=f&t=EIhXXRmuJN4pBIPR-0`
 
 ### Setup
