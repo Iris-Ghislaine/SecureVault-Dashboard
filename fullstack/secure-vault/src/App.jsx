@@ -86,16 +86,39 @@ export default function App() {
 
       {/* ── MAIN WORKSPACE (centre panel) ── */}
       <main className="app-main">
-        <div className="workspace-inactive">
-          <div className="workspace-icon">🔒</div>
-          <h2>No File Selected</h2>
-          <p>Select a file from the explorer to view its metadata and security properties.</p>
-          <div className="workspace-badges">
-            <span className="badge">AES-256</span>
-            <span className="badge">Zero Trust</span>
-            <span className="badge">E2E Encrypted</span>
+        {selectedFile ? (
+          /* ── FILE SELECTED STATE ── */
+          <div className="workspace-file-view">
+            <div className="workspace-file-header">
+              <span className="workspace-file-icon">📄</span>
+              <div>
+                <div className="workspace-file-title">{selectedFile.name}</div>
+                <div className="workspace-file-meta">
+                  {selectedFile.type?.toUpperCase() ?? 'FILE'} &nbsp;·&nbsp;
+                  {selectedFile.size ? `${(selectedFile.size / 1024).toFixed(1)} KB` : 'Size unknown'}
+                </div>
+              </div>
+            </div>
+            {/* Simulated file content preview */}
+            <div className="workspace-file-body">
+              <span className="workspace-preview-label">PREVIEW UNAVAILABLE</span>
+              <p>Binary or encrypted content cannot be rendered in the browser.</p>
+              <p>Use <strong>View Raw Headers</strong> or <strong>Audit Logs</strong> in the Properties panel for more details.</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          /* ── EMPTY STATE ── */
+          <div className="workspace-inactive">
+            <div className="workspace-icon">🔒</div>
+            <h2>No File Selected</h2>
+            <p>Select a file from the explorer to view its metadata and security properties.</p>
+            <div className="workspace-badges">
+              <span className="badge">AES-256</span>
+              <span className="badge">Zero Trust</span>
+              <span className="badge">E2E Encrypted</span>
+            </div>
+          </div>
+        )}
         {/* Decorative binary watermark */}
         <div className="binary-watermark">
           01001000 01000101 01011000<br />
