@@ -41,10 +41,7 @@ export default function App() {
           <span className="header-title">SecureVault</span>
           <span className="header-subtitle">Enterprise File Explorer</span>
         </div>
-        <div className="header-actions">
-          <span className="header-badge">CLASSIFIED</span>
-          <span className="header-badge">TLP:RED</span>
-        </div>
+
       </header>
 
       {/* ── LEFT SIDEBAR ── */}
@@ -147,20 +144,18 @@ export default function App() {
         <div className="status-item">
           <span>SELECTED</span>
           <span className="status-value">
-            {selectedFile ? selectedFile.name : '—'}
+            {selectedFile ? selectedFile.name : 'None'}
           </span>
         </div>
-        <div className="status-divider"></div>
-        <div className="status-item">
-          <span>QUERY</span>
-          <span className="status-value">
-            {searchQuery || '—'}
-          </span>
-        </div>
-        <div className="status-right">
-          <span className="status-link">v1.0.0</span>
-          <span className="status-link">SECURE CHANNEL</span>
-        </div>
+        {searchQuery && (
+          <>
+            <div className="status-divider"></div>
+            <div className="status-item">
+              <span>SEARCH</span>
+              <span className="status-value">{searchQuery}</span>
+            </div>
+          </>
+        )}
       </footer>
 
     </div>
