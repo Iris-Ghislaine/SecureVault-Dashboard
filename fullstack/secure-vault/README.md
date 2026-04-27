@@ -26,6 +26,7 @@ localStorage — persists recent files across sessions
 
 
 ### Project Structure
+```
 fullstack/secure-vault/
 ├── src/
 │   ├── components/
@@ -38,7 +39,7 @@ fullstack/secure-vault/
 │   │   └── main.css              # Design system
 │   ├── App.jsx                   # Layout + shared state
 │   └── main.jsx                  # Entry point
-
+```
 ### Features
 
 Recursive File TreeWorks at any depth — 2 levels or 20 levelsExpand / CollapseClick any folder to toggle open or closedFile SelectionClick a file to highlight it and view its metadataProperties PanelShows name, type, size, folder path, file IDKeyboard Navigation↑ ↓ move focus · → expand · ← collapse · Enter selectSearch & FilterFilters tree in real time, auto-expands matching foldersStyled ModalsRaw Headers + Audit Logs open in dark-theme modal cards
